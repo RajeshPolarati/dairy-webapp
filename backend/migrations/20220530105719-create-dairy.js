@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       description: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       image: {
@@ -19,21 +19,28 @@ module.exports = {
       useremail: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: { model: 'Users', key: 'email' }
+        references: { model: 'users', key: 'email' }
       },
       date: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       },
       createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        allowNull: true,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+
       },
       updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        allowNull: true,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
       }
-    });
+    }).then(async () => await queryInterface.addConstraint('dairies', {
+      fields: ['useremail', 'date'],
+      type: 'unique',
+      name: 'unique_entry'
+    }));
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('dairies');

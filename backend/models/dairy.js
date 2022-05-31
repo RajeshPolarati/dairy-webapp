@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      dairy.belongsTo(models.Users);
-      models.Users.hasMany(dairy, { foreignKey: "useremail" })
+      dairy.belongsTo(models.users, { foreignKey: "useremail" });
+      models.users.hasMany(dairy, { foreignKey: "useremail" })
     }
   }
   dairy.init({
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     image: {
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     useremail: {
       type: DataTypes.STRING,
       allowNull: false,
-      references: { model: 'Users', key: 'email' }
+      references: { model: 'users', key: 'email' }
     },
     date: {
       type: DataTypes.DATE,
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'dairy',
+    modelName: 'dairy'
   });
   return dairy;
 };

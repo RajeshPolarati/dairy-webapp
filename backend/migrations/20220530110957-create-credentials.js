@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -19,17 +23,24 @@ module.exports = {
       useremail: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: { model: 'Users', key: 'email' }
+        references: { model: 'users', key: 'email' }
       },
       createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        allowNull: true,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+
       },
       updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        allowNull: true,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
       }
-    });
+    }).then(async () => await queryInterface.addConstraint('credentials', {
+      fields: ['useremail', 'platform'],
+      type: 'unique',
+      name: 'unique_credentials'
+    }));;
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('credentials');
