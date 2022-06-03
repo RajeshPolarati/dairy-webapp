@@ -1,14 +1,15 @@
 import React from 'react'
 import { useState } from 'react'
 import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom';
 const axios = require('axios');
-
 const Login = (props) => {
     const [emailError, setEmailError] = useState("")
     const [passwordError, setPasswordError] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isProgress, setIsProgress] = useState(false)
+    const navigate = useNavigate();
     function handleLogin(e) {
         e.preventDefault();
         setIsProgress(true)
@@ -21,9 +22,12 @@ const Login = (props) => {
                 password, email
             }
         }).then((response) => {
-
             setIsProgress(false)
             console.log(response);
+            if (response.status == 200) {
+                localStorage.setItem("authToken", response.data.authToken)
+                navigate("/home")
+            }
         }).catch((err) => {
 
             setIsProgress(false)
@@ -72,7 +76,7 @@ const Login = (props) => {
                 <p>{passwordError}</p>
             </div>
             <div className="login-form-not">
-                <p onClick={() => { props.setType("register") }}>Not a user? Sign up here</p>
+                <p onClick={() => { props.setType("register") }} className="openregister">Not a user? Sign up here</p>
             </div>
             <div className="login-form-btn">
                 <button type="submit" id="loginbtn" disabled={isProgress ? true : false}>{isProgress ? <CircularProgress size="1.5rem" style={{ color: "white", marginTop: "3px" }} /> : "Sign in"}</button>

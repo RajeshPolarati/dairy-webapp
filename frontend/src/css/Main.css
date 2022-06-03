@@ -8,6 +8,8 @@
     display: flex;
 }
 
+
+
 .logo-image-div {
     width: 60%;
 }
@@ -37,6 +39,10 @@
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
+}
+
+.register-form-div {
+    width: 90%;
 }
 
 .login-form-group,
@@ -119,4 +125,33 @@
 .spin {
     height: 20px;
     width: 10px;
+}
+
+@media screen and (max-width: 950px) {
+    .logo-image-div {
+        width: 50%;
+    }
+
+    .Main-form {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .logo-image-div {
+        display: none;
+    }
+
+    .Main-form {
+        width: 90%;
+
+    }
+
+    .main-component {
+        justify-content: center;
+    }
+
+    .register-form {
+        width: 100%;
+    }
 }

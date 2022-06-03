@@ -1,0 +1,236 @@
+.alert,
+.success {
+    display: none;
+    width: 35%;
+}
+
+.alertopen {
+    height: 130px;
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+    padding-top: 17px;
+    position: absolute;
+    display: block;
+    top: 40%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    animation: openalert .2s 1 linear;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.alertclose {
+    height: 130px;
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+    padding-top: 15px;
+    position: absolute;
+    display: block;
+    top: 40%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    animation: closealert .2s 1 ease-in;
+}
+
+.alert div {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.alert div button {
+    width: 60px;
+    height: 30px;
+    border: none;
+    background-color: rgba(42, 42, 211, 0.834);
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin: 3px 10px 0px 10px;
+    transition: all .5s ease;
+    text-align: center;
+}
+
+.alert div button:active {
+    transform: scale(0.9, 0.9);
+}
+
+@keyframes openalert {
+    0% {
+        transform: scale(0.6, 0.6);
+    }
+
+    20% {
+        transform: scale(0.7, 0.7);
+    }
+
+    40% {
+        transform: scale(0.8, 0.8);
+    }
+
+    80% {
+        transform: scale(0.9, 0.9);
+    }
+
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes closealert {
+    0% {
+
+        transform: scale(1, 1);
+    }
+
+    25% {
+        transform: scale(0.7, 0.7);
+
+    }
+
+    75% {
+        transform: scale(0.4, 0.4);
+    }
+
+    100% {
+        transform: scale(0, 0);
+    }
+}
+
+.opensuccess {
+    background: white;
+    border-radius: 5px;
+    font-size: 25px;
+    padding: 10px;
+    position: absolute;
+    display: block;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    animation: openalert .5s 1 linear;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.closesuccess {
+
+    background: white;
+    border-radius: 5px;
+    font-size: 25px;
+    padding: 10px;
+    position: absolute;
+    display: block;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    animation: closealert .3s 1 ease-in;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.successdiv {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.success div button {
+    width: 65px;
+    height: 35px;
+    border: none;
+    background-color: rgb(30, 181, 30);
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin: 3px 10px 0px 10px;
+    transition: all .5s ease;
+    text-align: center;
+}
+
+.success div button:active {
+    transform: scale(0.9, 0.9);
+}
+
+.successtick {
+    width: 100px;
+    height: 100px;
+    font-size: 60px;
+    border-radius: 50%;
+    background-color: rgb(39, 180, 39);
+    color: white;
+    padding-top: 10px;
+    animation: succes-stick-anim 2s 1 linear;
+    text-align: center;
+}
+
+@keyframes succes-stick-anim {
+    0% {
+        transform: scale(0.2, 0.2);
+    }
+
+    10% {
+        transform: scale(0.4, 0.4);
+    }
+
+    20% {
+        transform: scale(0.6, 0.6);
+    }
+
+    30% {
+        transform: scale(0.8, 0.8);
+    }
+
+    40% {
+        transform: scale(1, 1);
+    }
+
+    50% {
+        transform: scale(0.7, 0.7);
+    }
+
+    70% {
+        transform: scale(1, 1);
+    }
+
+    90% {
+        transform: scale(0.7, 0.7);
+    }
+
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .opensuccess {
+        width: 50%;
+    }
+
+    .closesuccess {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .alertopen {
+        width: 70%;
+    }
+
+    .opensuccess {
+        width: 70%;
+    }
+
+    .closesuccess {
+        width: 70%;
+    }
+
+    .alertclose {
+        width: 70%;
+    }
+}

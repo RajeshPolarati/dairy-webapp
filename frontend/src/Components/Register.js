@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import CircularProgress from '@mui/material/CircularProgress';
+import { TiTick } from "react-icons/ti";
+import "../css/test.css"
+import { useNavigate } from "react-router-dom"
 const axios = require('axios');
 const Register = (props) => {
     const [isProgress, setIsProgress] = useState(false)
@@ -15,6 +18,7 @@ const Register = (props) => {
     const [mobile, setMobile] = useState("")
     const [password, setPassword] = useState("")
     const [cpassword, setCpassword] = useState("")
+    const navigate = useNavigate();
     function validate() {
         let isValid = true;
         if (name.match(/^[a-zA-Z]{5,20}$/)) {
@@ -46,7 +50,6 @@ const Register = (props) => {
     function handleForm(e) {
         e.preventDefault();
         if (validate()) {
-
             setIsProgress(true)
             axios({
                 method: 'post',
@@ -60,6 +63,9 @@ const Register = (props) => {
 
                 setIsProgress(false)
                 console.log(response);
+                if (response.status == 200) {
+                    document.getElementById("success").classList.add("opensuccess")
+                }
             }).catch((err) => {
                 setIsProgress(false)
                 // console.log(err);
@@ -87,7 +93,16 @@ const Register = (props) => {
 
     }
 
-    return (
+    function closeSuccess() {
+        document.getElementById("success").classList.remove("opensuccess")
+        document.getElementById("success").classList.add("closesuccess")
+        setTimeout(() => {
+            document.getElementById("success").classList.remove("closesuccess")
+            props.setType("login")
+        }, 300)
+    }
+
+    return (<div className="register-form-div">
         <form className="register-form" onSubmit={handleForm}>
             <div className="register-form-header">
                 <h2>Sign Up</h2>
@@ -133,9 +148,23 @@ const Register = (props) => {
                 <p onClick={() => { props.setType("login") }}>Already a user? Sign in here</p>
             </div>
             <div className="register-form-btn">
-                <button type="submit" id="signupbtn" disabled={isProgress ? true : false}>{isProgress ? <CircularProgress size="1.5rem" style={{ color: "white", marginTop: "3px" }} /> : "Sign Up"}</button>
+                <button className="openlogin" type="submit" id="signupbtn" disabled={isProgress ? true : false}>{isProgress ? <CircularProgress size="1.5rem" style={{ color: "white", marginTop: "3px" }} /> : "Sign Up"}</button>
             </div>
         </form>
+        <div className="success" id="success">
+            <div className="successdiv">
+                <div className="successtick">
+                    <TiTick />
+                </div>
+            </div>
+            <div className="successdiv">
+                <p>Succesfully registered </p>
+            </div>
+            <div className="successdiv">
+                <button onClick={closeSuccess}>OK</button>
+            </div>
+        </div>
+    </div>
 
     )
 }

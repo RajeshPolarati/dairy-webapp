@@ -1,13 +1,19 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-const Navbar = () => {
+const Navbar = (props) => {
+    const navigate = useNavigate()
+    function handleLogout() {
+        localStorage.removeItem('authToken')
+        navigate("/")
+    }
     return (
         <div className="navbar">
             <ul>
-                <li><a href="#">Show Entries</a></li>
-                <li><a href="#">Show Credentials</a></li>
+                <li className={props.selected == "home" ? "active" : ""}><Link to="/home">Show Entries</Link></li>
+                <li className={props.selected == "credentials" ? "active" : ""}><Link to="/credentials">Show Credentials</Link></li>
             </ul>
-            <button>
+            <button onClick={handleLogout}>
                 Logout
             </button>
         </div>
