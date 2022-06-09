@@ -16,6 +16,7 @@ const Home = (props) => {
     const [descriptionError, setDescriptionError] = useState("");
     const [description, setDescription] = useState("")
     const [edit, setEdit] = useState(false)
+    const [file, setFile] = useState();
     const [isLoading, setIsLoading] = useState(true)
     const [entries, setEntries] = useState([])
     const navigate = useNavigate()
@@ -29,7 +30,7 @@ const Home = (props) => {
             }
 
         }).then((response) => {
-            //console.log(response);
+            // console.log(response);
             setIsToken(true)
             setEntries(response.data.Entries);
             setIsLoading(false)
@@ -39,23 +40,23 @@ const Home = (props) => {
                 navigate("/")
             }
         })
-    })
+    }, [])
 
-    // function refresh() {
-    //     axios({
-    //         method: 'get',
-    //         url: '/dairy',
-    //         responseType: 'stream',
-    //         headers: {
-    //             Authorization: 'Bearer ' + localStorage.getItem('authToken')
-    //         }
-    //     }).then((response) => {
-    //         console.log(response);
-    //         setEntries(response.data.Entries);
-    //     })
-    // }
+    function refresh() {
+        axios({
+            method: 'get',
+            url: '/dairy',
+            responseType: 'stream',
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('authToken')
+            }
+        }).then((response) => {
+            // console.log(response);
+            setEntries(response.data.Entries);
+        })
+    }
 
-    function add(e) {
+    async function add(e) {
         e.preventDefault();
         console.log(startDate.toISOString().split('T')[0]);
         console.log(description);
@@ -63,46 +64,51 @@ const Home = (props) => {
             date: startDate.toISOString().split('T')[0],
             description
         }
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("date", startDate.toISOString().split('T')[0]);
+        formData.append("description", description);
+
+        console.log(description);
         axios({
             method: 'post',
             url: '/dairy/create',
-            contentType: 'application/json',
-            responseType: 'stream',
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('authToken')
             },
-            data: data
-        }).then((response) => {
-            //setIsProgress(false)
-            console.log(response);
-            setStartDate(new Date());
-            setDateError("")
-            setDescriptionError("")
-            setDescription("")
-            //refresh();
+            data: formData
+        })
+            .then((response) => {
+                //setIsProgress(false)
+                console.log(response);
+                setStartDate(new Date());
+                setDateError("")
+                setDescriptionError("")
+                setDescription("")
+                refresh();
+            }).catch((err) => {
+                //setIsProgress(false)
+                console.log(err);
+                setDateError("")
+                setDescriptionError("")
+                if (err.response.status == 500) {
+                    setDateError("Already there is an entry with this date!")
+                }
+                if (err.response.data.errors) {
+                    const errors = err.response.data.errors;
+                    for (let i = 0; i < errors.length; i++) {
 
-        }).catch((err) => {
-            //setIsProgress(false)
-            console.log(err);
-            setDateError("")
-            setDescriptionError("")
-            if (err.response.status == 500) {
-                setDateError("Already there is an entry with this date!")
-            }
-            if (err.response.data.errors) {
-                const errors = err.response.data.errors;
-                for (let i = 0; i < errors.length; i++) {
+                        switch (errors[i].param) {
+                            case "description": setDescriptionError(errors[i].msg)
+                                break;
+                            default: (() => { })()
 
-                    switch (errors[i].param) {
-                        case "description": setDescriptionError(errors[i].msg)
-                            break;
-                        default: (() => { })()
-
+                        }
                     }
                 }
-            }
 
-        });
+            });
     }
     return (
         <div className="home">
@@ -120,6 +126,12 @@ const Home = (props) => {
                                         <label>Choose Date:</label>
                                         <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
                                         <p>{dateError}</p>
+                                    </div>
+                                    <div className="addentryFormInput">
+                                        <label>Additional Image:</label>
+                                        <input type="file" accept="image/*" onChange={(e) => {
+                                            setFile(e.target.files[0])
+                                        }} />
                                     </div>
                                     <div className="addentryFormInput">
                                         <label>Add Description:</label>
@@ -148,8 +160,8 @@ const Home = (props) => {
                                             </div>
                                             :
 
-                                            entries.map((entry) => (
-                                                <Entry data={entry} />
+                                            entries.map((entry, i) => (
+                                                <Entry data={entry} refresh={refresh} key={i} />
                                             ))
 
                                 }

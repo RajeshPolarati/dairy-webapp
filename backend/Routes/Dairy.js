@@ -3,9 +3,10 @@ const router = express.Router();
 const verifytoken = require("../TokenVerification")
 const db = require('../models/index')
 const { validationResult } = require('express-validator');
+const path = require('path')
 const { createEntryValiadtion, deleteValidation, updateValidation } = require("../Validation/Entryvalidation")
 router.post('/create', verifytoken, createEntryValiadtion, async (req, res, next) => {
-    // console.log(req)
+    // console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.status(400).json({ errors: errors.array() });
@@ -13,10 +14,19 @@ router.post('/create', verifytoken, createEntryValiadtion, async (req, res, next
         const data = {
             description: req.body.description,
             date: req.body.date,
-            useremail: req.verifiedDetails.email
+            useremail: req.verifiedDetails.email,
+            image: ""
         }
-        console.log(data);
+        // console.log(data);
         try {
+            if (req.files) {
+                let file = req.files.file;
+                //console.log(file);
+                let imagePath = Date.now() + file.name
+                file.mv("./public/" + imagePath);
+                data.image = imagePath
+            }
+            console.log(data);
             const Entry = await db.dairy.create(data)
             console.log(Entry.toJSON());
             res.status(200).json({ message: "Successfully Added" })
@@ -27,6 +37,12 @@ router.post('/create', verifytoken, createEntryValiadtion, async (req, res, next
     }
 })
 
+router.get('/getImage/:path', verifytoken, (req, res) => {
+    console.log(req.params.path);
+    const dir = path.parse(__dirname)
+    console.log(path.join(dir.dir, "public", req.params.path));
+    res.sendFile(path.join(dir.dir, "public", req.params.path))
+})
 
 router.get("/", verifytoken, async (req, res) => {
     try {
@@ -61,12 +77,32 @@ router.put("/", verifytoken, updateValidation, async (req, res) => {
                 res.status(401).json({ error: "Unauthorised request" })
             } else {
                 console.log(isUserEntry);
-                const updatedEntry = await db.dairy.update({ description: req.body.description }, {
-                    where: {
-                        id: req.body.id
-                    }
-                });
-                console.log(updatedEntry);
+                const data = {
+                    description: req.body.description,
+                    image: ""
+                }
+                if (req.files) {
+                    let file = req.files.file;
+                    //console.log(file);
+                    let imagePath = Date.now() + file.name
+                    file.mv("./public/" + imagePath);
+                    data.image = imagePath
+
+                    //console.log(data);
+                    const updatedEntry = await db.dairy.update(data, {
+                        where: {
+                            id: req.body.id
+                        }
+                    });
+                } else {
+                    const updatedEntry = await db.dairy.update({ description: req.body.description }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    });
+                }
+
+                //console.log(updatedEntry);
                 res.status(200).json({ message: "Entry Updated successfully" })
             }
 

@@ -244,3 +244,9 @@
 .entry-data {
     padding: 20px 40px 0px 40px;
 }
+
+.imglink {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}

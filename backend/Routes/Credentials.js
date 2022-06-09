@@ -78,13 +78,18 @@ router.put("/", verifytoken, updateCredentialValidation, async (req, res) => {
             } else {
                 console.log(isUserCredential);
                 const allCredentials = await db.credentials.findAll({
+                    raw: true,
                     where: {
                         platform: {
                             [Op.iLike]: req.body.platform
                         },
-                        useremail: req.verifiedDetails.email
+                        useremail: req.verifiedDetails.email,
+                        id: {
+                            [Op.ne]: req.body.id
+                        }
                     }
                 })
+                //console.log(allCredentials);
                 if (allCredentials.length == 0) {
                     const updatedCredential = await db.credentials.update({
                         username: req.body.username,

@@ -19,10 +19,24 @@ const Credential = (props) => {
         setPlatform(props.data.platform)
         setUsername(props.data.username)
         setPassword(props.data.password)
-    }, [])
+    }, [props])
+
     function convert(value) {
-        let localDate = new Date(value).toLocaleString().replaceAll("/", "-").split(" ")
-        return localDate[0] + " " + localDate[1]
+        var options = {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        };
+        let localDate2 = new Date(value).toLocaleString('en', options).split(",")
+
+        let dates = localDate2[0].split("/")
+        let finalDate = [dates[1], dates[0], dates[2]].join("/") + localDate2[1]
+
+        // let localDate = new Date(value).toLocaleString().replaceAll("/", "-").split(" ")
+        return finalDate
     }
 
     function openalert() {
@@ -49,6 +63,7 @@ const Credential = (props) => {
         }).then((response) => {
             console.log(response);
             closealert();
+            props.refresh()
 
         }).catch((err) => {
             console.log(err);
@@ -77,7 +92,7 @@ const Credential = (props) => {
             setPasswordError("")
             setUsernameError("")
             setEdit(false)
-            // props.refresh();
+            props.refresh();
 
         }).catch((err) => {
             console.log(err);

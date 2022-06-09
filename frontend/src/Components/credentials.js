@@ -37,8 +37,25 @@ const Credentials = (props) => {
                 navigate("/")
             }
         })
-    })
+    }, [])
 
+    function refresh() {
+        axios({
+            method: 'get',
+            url: '/credentials',
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('authToken')
+            }
+
+        }).then((response) => {
+            setCredentials(response.data.AllCredentials);
+
+        }).catch((error) => {
+            if (error.response.status == 400) {
+                navigate("/")
+            }
+        })
+    }
     function add(e) {
         e.preventDefault();
         const data = {
@@ -61,6 +78,7 @@ const Credentials = (props) => {
             setPassword("");
             setPasswordError("")
             setUsernameError("")
+            refresh()
         }).catch((err) => {
             console.log(err);
             setPlatformError("")
@@ -134,8 +152,8 @@ const Credentials = (props) => {
                                             </div>
                                             :
 
-                                            credentials.map((credential) => (
-                                                <Credential data={credential} />
+                                            credentials.map((credential, i) => (
+                                                <Credential data={credential} key={i} refresh={refresh} />
                                             ))
 
                                 }
